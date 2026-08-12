@@ -50,13 +50,24 @@ venderUnidades(cantidad: number) : void{
     }
     else{
         console.log(`No hay suficiente stock: ${cantidad} unidades de ${this.nombre}`)
-        // justificacion: elegí un mensaje en consola en lugar de lanzar un Error (throw new Error) 
-      // para evitar que el programa se detenga por completo mientras probamos el código
+        // justificacion: Es una situación normal, no un error: Quedarse sin stock es algo común en las ventas. 
+        // un throw new Error se usa cuando el programa entero falla o se rompe
     }
 }
-
+// calculamos el descuento 
+// ese valor sin modificar el this.precio original.
+aplicarDescuento(porcentaje: number): number {
+    const aplicarDescuento = this.precio * (porcentaje / 100);
+    return this.precio - aplicarDescuento
+}
 }
 
 const producto = new Producto("Mouse Red Dragon", 70000, "Electrónica", 70);
 console.log(producto.describir());
+
+console.log(`Precio con el el 20% de descuento: $${producto.aplicarDescuento(20)}`);
+
+producto.venderUnidades(3);
+
+
 
