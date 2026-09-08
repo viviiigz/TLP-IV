@@ -6,21 +6,20 @@ interface User {
 //clases con responsabilidad unica
 //respondabilidad, logica de validacion
 class UserValidator {
-  isValidEmail(email: string): boolean {
-    if (email.includes("@")) {
-      return true;
-    } else {
-      return false;
+  isValidEmail(email: string) {
+    if (!email.includes("@")) {
+      throw new Error("Ta mal");
     }
+    return false;
   }
 }
 
 //repositorio
 class UserRepository {
-  private users: User[] = [];
+  users: User[] = [];
 
-  register(username: string , email: string): void {
-    this.users.push({username, email});
+  save({ username, email }: User) {
+    this.users.push({ username, email });
   }
 }
 
@@ -33,31 +32,25 @@ class EmailService {
 
 //clase coordinadora
 class UserRegistrationService {
+  constructor(
+    public validator: UserValidator = new UserValidator(),
+    public repository: UserRepository = new UserRepository(),
+    public emailService: EmailService = new EmailService(),
+  ) {}
 
-  private validator: UserValidator;
-  private repository: UserRepository;
-  private emailService: EmailService;
+  newUser({ username, email }: User): string {
+    //validamos
+    this.validator.isValidEmail(email);
 
-constructor() {
-    this.validator = new UserValidator();
-    this.repository = new UserRepository();
-    this.emailService = new EmailService();
+    // guardamos
+    this.repository.save({ username, email });
+
+    // enviamos el correo y devolvemos el resultado
+    return this.emailService.sendWelcomeEmail(email);
   }
+}
 
-  registerUser(username: string, email: string): string {
-      //validamos
-      if (!this.validator.isValidEmail(email)) {
-        throw new Error("El correo no es valido");
-      }
-
-      // guardamos
-      this.repository.register(username, email);
-      
-      // enviamos el correo y devolvemos el resultado
-      return this.emailService.sendWelcomeEmail(email);
-    }
-  }
-
-  // instanciamos la clase principal (usa las dependencias por defecto del constructor)
+// instanciamos la clase principal (usa las dependencias por defecto del constructor)
 const userRegistration = new UserRegistrationService();
-console.log(userRegistration.registerUser("Centu", "agus@email.com"));
+const user = userRegistration.newUser({ email: "vivi@gmail.com", username: "vivi" });
+console.log(user)

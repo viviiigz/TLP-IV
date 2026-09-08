@@ -3,15 +3,18 @@
   "version": "1.0.0",
   "description": "Al terminar estos ejercicios deberias poder:",
   "main": "index.js",
-    "scripts": {
-      "01-srp": "node ejercicios/01-srp.ts",
-      "02-ocp": "node ejercicios/02-ocp.ts",
-      "03-lsp": "node ejercicios/03-lsp.ts",
-      "04-isp": "node ejercicios/04-isp.ts",
-      "05-dip": "node ejercicios/05-dip.ts"
-    },
+  "scripts": {
+    "01-srp": "tsx ejercicios/01-srp.ts",
+    "02-ocp": "tsx ejercicios/02-ocp.ts",
+    "03-lsp": "tsx ejercicios/03-lsp.ts",
+    "04-isp": "tsx ejercicios/04-isp.ts",
+    "05-dip": "tsx ejercicios/05-dip.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "devDependencies": {
+    "tsx": "^4.23.13"
+  }
 }
