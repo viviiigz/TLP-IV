@@ -1,18 +1,28 @@
-type PaymentType = "card" | "cash";
+interface PaymentMethod {
+  pay(amount: number): void;
+}
 
-class PaymentProcessor {
-  pay(type: PaymentType, amount: number): void {
-    switch (type) {
-      case "card":
-        console.log(`Pagando $${amount} con tarjeta`);
-        break;
-      case "cash":
-        console.log(`Pagando $${amount} en efectivo`);
-        break;
-      default:
-        throw new Error("Medio de pago no soportado");
-    }
+class CardPayment implements PaymentMethod {
+  pay(amount: number): void {
+    console.log(`Pagando $${amount} con tarjeta`);
   }
 }
 
-new PaymentProcessor().pay("card", 100);
+class CashPayment implements PaymentMethod {
+  pay(amount: number): void {
+    console.log(`Pagando $${amount} en efectivo`);
+  }
+}
+
+class PaymentProcessor {
+  // ahora el procesador no usa switch, simplemente recibe un objeto 
+  // que cumpla con la interfaz
+  process(paymentMethod: PaymentMethod, amount: number): void {
+    paymentMethod.pay(amount);
+  }
+}
+
+const processor = new PaymentProcessor();
+
+processor.process(new CardPayment(), 100);
+processor.process(new CashPayment(), 50);
