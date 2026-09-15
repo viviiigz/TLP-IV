@@ -1,5 +1,11 @@
-class Rectangle {
-  constructor(protected width: number, protected height: number) {}
+abstract class Shape {
+  abstract area(): number;
+}
+
+class Rectangle extends Shape {
+  constructor(protected width: number, protected height: number) {
+    super();
+  }
 
   setWidth(width: number): void {
     this.width = width;
@@ -14,17 +20,21 @@ class Rectangle {
   }
 }
 
-class Square extends Rectangle {
-  setWidth(width: number): void {
-    this.width = width;
-    this.height = width;
+// un cuadrado solo necesita conocer el tamaño de su lado
+class Square extends Shape {
+  constructor(private side: number) {
+    super();
   }
 
-  setHeight(height: number): void {
-    this.width = height;
-    this.height = height;
+  setSide(side: number): void {
+    this.side = side;
+  }
+
+  area(): number {
+    return this.side * this.side; 
   }
 }
+
 
 function resizeRectangle(rectangle: Rectangle): void {
   rectangle.setWidth(5);
@@ -32,5 +42,9 @@ function resizeRectangle(rectangle: Rectangle): void {
   console.log(`Area esperada: 50. Area obtenida: ${rectangle.area()}`);
 }
 
-resizeRectangle(new Rectangle(1, 1));
-resizeRectangle(new Square(1, 1));
+const miRectangulo = new Rectangle(1, 1);
+resizeRectangle(miRectangulo);
+
+const miCuadrado = new Square(5);
+
+console.log(`El area del cuadrado es: ${miCuadrado.area()}`);

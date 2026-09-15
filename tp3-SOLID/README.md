@@ -52,8 +52,13 @@ Identificar cada responsabilidad y mover a su propia clase (validacion, almacena
 Preguntas:
 
 - Que responsabilidades tiene `UserManager`?
+RTA: Tiene cuatro responsabilidades; coordina el registro de usuarios, valida el formato de los datos, gestiona el almacenamiento (guarda la información) y redacta/envía correos
+
 - Que ocurre si cambia la forma de guardar datos?
+RTA: Obliga a modificar la clase UserManager.
+
 - Que clase podria encargarse de enviar correos?
+RTA: Una clase dedicada exclusivamente a eso, como EmailService
 
 La solucion separa esas tareas en `UserValidator`, `UserRepository`, `EmailService` y `UserRegistrationService`.
 
@@ -74,11 +79,13 @@ Definir una interfaz comun para los metodos de pago y crear una clase por cada u
 Preguntas:
 
 - Que parte debe modificarse para agregar pago con transferencia?
+RTA: En el codigo original había q modificar el bloque switch dentro del método pay de la clase PaymentProcessor agregando un nuevo case
 - Como podriamos representar un medio de pago?
+RTA: Mediante una abstracción que sirva como contrato para cualquier forma de pago futura. eL PaymentMethod
 - Que comportamiento comun tienen todos los medios de pago?
+RTA: Todos comparten la acción de procesar un cobro por un monto específico (el método pay(amount: number))
 
 La solucion utiliza la interfaz `PaymentMethod` y agrega nuevos metodos de pago mediante nuevas clases.
-
 ---
 
 ## 3. LSP: Liskov Substitution Principle
@@ -96,9 +103,13 @@ Eliminar la herencia entre `Square` y `Rectangle`. Definir un contrato comun `Sh
 Preguntas:
 
 - Por que el area final no coincide con lo que espera `resizeRectangle`?
-- Es siempre correcto modelar un cuadrado como un rectangulo por herencia?
-- Que abstraccion comun podriamos usar?
+RTA: Porque la clase Square al modificar su altura (setHeight) también modifica automáticamente su ancho para mantener sus lados iguales. Esto rompe la fórmula matemática de base por altura que el sistema esperaba del rectángulo
 
+- Es siempre correcto modelar un cuadrado como un rectangulo por herencia?
+RTA: En programación orientada a objetos no, una subclase que rompe las expectativas de su clase base produce errores difíciles de detectar al usar objetos de forma intercambiable
+
+- Que abstraccion comun podriamos usar?
+RTA;  Usamos la clase abstracta o interfaz Shape para q obligue a todas las figuras a tener un método para calcular su área, pero dejando que cada una lo implemente a su manera
 La solucion elimina la herencia incorrecta y modela ambas figuras como objetos que cumplen el contrato `Shape`.
 
 ---
@@ -118,8 +129,13 @@ Partir la interfaz `MultifunctionPrinter` en interfaces chicas (`Printer`, `Scan
 Preguntas:
 
 - Que metodo no necesita `SimplePrinter`?
+RTA: No necesita los métodos scan (escanear) ni fax (enviar fax) porque físicamente no puede hacerlo
+
 - Que problema causa implementar metodos que lanzan errores?
+RTA: Una interfaz demasiado grande obliga a implementar métodos irrelevantes dejando código muerto o sin sentido en las clases. Además, genera confusión para otros programadores que intenten usar esa clase
+
 - Como separar las capacidades de una impresora?
+RTA: Creando las interfaces pequeñas y específicas para cada propósito: Printer, Scanner y Fax
 
 La solucion divide la interfaz en `Printer`, `Scanner` y `Fax`.
 
@@ -140,8 +156,14 @@ Definir una interfaz `Notifier` con un metodo de envio y haz que `OrderService` 
 Preguntas:
 
 - Que dependencia concreta crea `OrderService`?
+RTA: Crea una instancia directa de EmailSender usando la palabra reservada new
+
 - Como probarias la clase sin enviar un correo?
+RTA: Gracias a la inversión de dependencias, se puede depender de abstracciones en lugar de concreciones para testear con mocks
+
 - Que contrato comun podrian implementar el correo y el SMS?
+RTA: Una interfaz general: Notifier que tenga su método común send(to, message)
+
 
 La solucion recibe una dependencia que cumple la interfaz `Notifier` mediante el constructor.
 

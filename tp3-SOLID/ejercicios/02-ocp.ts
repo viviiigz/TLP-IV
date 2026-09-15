@@ -22,7 +22,14 @@ class PaymentProcessor {
   }
 }
 
+class TransferPayment implements PaymentMethod {
+  pay(amount: number): void {
+    console.log(`Pagando $${amount} con transferencia`);
+  }
+}
+
 const processor = new PaymentProcessor();
 
 processor.process(new CardPayment(), 100);
 processor.process(new CashPayment(), 50);
+processor.process(new TransferPayment(), 200);
